@@ -5261,7 +5261,10 @@ function leerSplash(){
   return true;
 }
 // Arranque
-if(!leerSplash()) ir('s-intro');
+// Arranque
+document.addEventListener('DOMContentLoaded', function(){
+  if(!leerSplash()) ir('s-intro');
+});
 </script>
 
 <div id="crisis-overlay">
