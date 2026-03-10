@@ -1022,13 +1022,15 @@ body.tema-n3 .topbar, body.tema-n4 .topbar, body.tema-n5 .topbar {
 (function(){
   const p = new URLSearchParams(window.location.search);
   if(!p.has('r')) return;
-  document.addEventListener('DOMContentLoaded', function(){
-    document.querySelectorAll('.screen').forEach(s=>s.style.display='none');
-    const el = document.getElementById('s-splash');
-    if(el){
-      el.style.cssText='display:flex!important;position:fixed;inset:0;z-index:9999;background:#0e0c0a;flex-direction:column;align-items:center;justify-content:center;padding:2rem;text-align:center;';
-    }
-  });
+ document.addEventListener('DOMContentLoaded', function(){
+  const tieneSplash = leerSplash();
+  if(!tieneSplash){
+    ir('s-intro');
+  } else {
+    // Forzar relleno con pequeño delay para asegurar que el DOM está pintado
+    setTimeout(leerSplash, 50);
+  }
+});
 })();
 </script>
   
