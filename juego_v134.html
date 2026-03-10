@@ -5209,35 +5209,57 @@ function leerSplash(){
   const p = new URLSearchParams(window.location.search);
   if(!p.has('r')) return false;
 
-  const cls   = p.get('r')||'perdido';
-  const tit   = decodeURIComponent(p.get('t')||'RESULTADO');
-  const sub   = decodeURIComponent(p.get('sb')||'');
-  const s0    = decodeURIComponent(p.get('s0')||'');
-  const s1    = decodeURIComponent(p.get('s1')||'');
-  const desc  = decodeURIComponent(p.get('d')||'');
-  const partido = decodeURIComponent(p.get('p')||'');
+  const cls     = p.get('r')||'perdido';
+  const tit     = decodeURIComponent(p.get('t')||'RESULTADO');
+  const sub     = decodeURIComponent(p.get('sb')||'');
+  const s0      = decodeURIComponent(p.get('s0')||'');
+  const s1      = decodeURIComponent(p.get('s1')||'');
+  const desc    = decodeURIComponent(p.get('d')||'');
   const color   = decodeURIComponent(p.get('c')||'#888');
 
   document.documentElement.style.setProperty('--partido-color', color);
 
-  const splash = document.getElementById('s-splash');
-  splash.classList.add('active');
+  // Ocultar todas las pantallas del juego
+  document.querySelectorAll('.screen').forEach(s=>{
+    s.style.display='none';
+    s.style.visibility='hidden';
+  });
 
-  document.getElementById('splash-titulo').textContent = tit;
-  document.getElementById('splash-titulo').className   = 'splash-titulo '+cls;
-  document.getElementById('splash-sub').textContent    = sub;
-  document.getElementById('splash-desc').textContent   = desc;
+  // Mostrar splash directamente en body si no existe el elemento
+  const existing = document.getElementById('s-splash');
+  const container = existing || document.createElement('div');
+  container.id = 's-splash';
+  container.style.cssText = `
+    display:flex !important;
+    visibility:visible !important;
+    position:fixed;
+    inset:0;
+    z-index:9999;
+    flex-direction:column;
+    align-items:center;
+    justify-content:center;
+    padding:2rem 1.5rem;
+    text-align:center;
+    background:#0e0c0a;
+    min-height:100vh;
+  `;
 
-  let statsHtml = '';
-  if(s0) statsHtml += `<div class="splash-stat"><span class="splash-stat-n" style="color:${color}">${s0}</span><span class="splash-stat-l">Resultado</span></div>`;
-  if(s1) statsHtml += `<div class="splash-stat"><span class="splash-stat-n" style="color:var(--am)">${s1}</span><span class="splash-stat-l">Recursos</span></div>`;
-  document.getElementById('splash-stats').innerHTML = statsHtml;
+  container.innerHTML = `
+    <div style="font-family:'IBM Plex Mono',monospace;font-size:.55rem;letter-spacing:3px;text-transform:uppercase;color:#666;margin-bottom:.6rem;">COMITIA · Resultado compartido</div>
+    <div style="font-family:'Bebas Neue',sans-serif;font-size:clamp(3.5rem,12vw,7rem);line-height:1;margin-bottom:.5rem;color:${cls==='ganado'?'#27ae60':cls==='empate'?'#c9900a':'#c0392b'};text-shadow:0 0 60px ${cls==='ganado'?'rgba(39,174,96,.4)':cls==='empate'?'rgba(201,144,10,.4)':'rgba(192,57,43,.4)'};">${tit}</div>
+    <div style="font-family:'IBM Plex Mono',monospace;font-size:.6rem;letter-spacing:2px;text-transform:uppercase;color:#666;margin-bottom:1.8rem;">${sub}</div>
+    <div style="display:flex;gap:2rem;justify-content:center;margin-bottom:2rem;flex-wrap:wrap;">
+      ${s0?`<div style="text-align:center"><span style="font-family:'Bebas Neue',sans-serif;font-size:2.8rem;line-height:1;display:block;color:${color}">${s0}</span><span style="font-family:'IBM Plex Mono',monospace;font-size:.5rem;letter-spacing:2px;text-transform:uppercase;color:#666;">Votos</span></div>`:''}
+      ${s1?`<div style="text-align:center"><span style="font-family:'Bebas Neue',sans-serif;font-size:2.8rem;line-height:1;display:block;color:#c9900a">${s1}</span><span style="font-family:'IBM Plex Mono',monospace;font-size:.5rem;letter-spacing:2px;text-transform:uppercase;color:#666;">Concejales</span></div>`:''}
+    </div>
+    <div style="font-size:.8rem;color:#888;font-style:italic;max-width:420px;line-height:1.7;margin-bottom:2.5rem;">${desc}</div>
+    <button onclick="window.location.href=window.location.pathname" style="font-family:'Bebas Neue',sans-serif;font-size:1.1rem;letter-spacing:3px;background:${color};color:#fff;border:none;padding:.8rem 2.2rem;border-radius:1px;cursor:pointer;">▶ JUGAR TÚ TAMBIÉN</button>
+    <div style="font-family:'IBM Plex Mono',monospace;font-size:.5rem;letter-spacing:4px;color:#444;margin-top:2.5rem;text-transform:uppercase;">COMITIA — Simulador político español</div>
+  `;
 
-  // Ocultar todo lo demás
-  document.querySelectorAll('.screen').forEach(s=>s.style.display='none');
+  if(!existing) document.body.appendChild(container);
   return true;
 }
-
 // Arranque
 if(!leerSplash()) ir('s-intro');
 </script>
