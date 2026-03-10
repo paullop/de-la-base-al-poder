@@ -1022,15 +1022,31 @@ body.tema-n3 .topbar, body.tema-n4 .topbar, body.tema-n5 .topbar {
 (function(){
   const p = new URLSearchParams(window.location.search);
   if(!p.has('r')) return;
- document.addEventListener('DOMContentLoaded', function(){
-  const tieneSplash = leerSplash();
-  if(!tieneSplash){
-    ir('s-intro');
-  } else {
-    // Forzar relleno con pequeño delay para asegurar que el DOM está pintado
-    setTimeout(leerSplash, 50);
-  }
-});
+  document.addEventListener('DOMContentLoaded', function(){
+    document.querySelectorAll('.screen').forEach(s=>s.style.display='none');
+    const el = document.getElementById('s-splash');
+    if(el) el.style.cssText='display:flex!important;position:fixed;inset:0;z-index:9999;background:#0e0c0a;flex-direction:column;align-items:center;justify-content:center;padding:2rem;text-align:center;';
+
+    const cls   = p.get('r')||'perdido';
+    const tit   = decodeURIComponent(p.get('t')||'RESULTADO');
+    const sub   = decodeURIComponent(p.get('sb')||'');
+    const s0    = decodeURIComponent(p.get('s0')||'');
+    const s1    = decodeURIComponent(p.get('s1')||'');
+    const desc  = decodeURIComponent(p.get('d')||'');
+    const color = decodeURIComponent(p.get('c')||'#888');
+
+    const tEl  = document.getElementById('splash-titulo');
+    const sEl  = document.getElementById('splash-sub');
+    const stEl = document.getElementById('splash-stats');
+    const dEl  = document.getElementById('splash-desc');
+
+    if(tEl){ tEl.textContent=tit; tEl.className='splash-titulo '+cls; }
+    if(sEl) sEl.textContent=sub;
+    if(dEl) dEl.textContent=desc;
+    if(stEl) stEl.innerHTML=
+      (s0?`<div class="splash-stat"><span class="splash-stat-n" style="color:${color}">${s0}</span><span class="splash-stat-l">Votos</span></div>`:'')+
+      (s1?`<div class="splash-stat"><span class="splash-stat-n" style="color:#c9900a">${s1}</span><span class="splash-stat-l">Concejales</span></div>`:'');
+  });
 })();
 </script>
   
